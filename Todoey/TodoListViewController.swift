@@ -12,12 +12,19 @@ class TodoListViewController: UITableViewController {
 
     var itemArray = ["Find Mike", "Buy Eggos", "Destory Demogorgon"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // restore the save data from plist
+        if let dataArray = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = dataArray
+        }
     }
 
     
-    // MARK - Tableview Datasource Methods
+    // MARK: - Tableview Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
@@ -33,7 +40,7 @@ class TodoListViewController: UITableViewController {
         return cell
     }
     
-    // MARK - Table Delegate Methods
+    // MARK: - Table Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -61,6 +68,7 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             self.itemArray.append(textField.text!)
             self.tableView.reloadData()
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
         }
         
         alert.addAction(action)
